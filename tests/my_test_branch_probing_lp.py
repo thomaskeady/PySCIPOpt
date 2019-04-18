@@ -3,41 +3,41 @@ import torch
 
 class MyBranching(Branchrule):
 
-	def __init__(self, model, cont):
-		self.model = model
-		self.cont = cont
-		self.count = 0
-		self.was_called_val = False
-		self.was_called_int = False
+    def __init__(self, model, cont):
+        self.model = model
+        self.cont = cont
+        self.count = 0
+        self.was_called_val = False
+        self.was_called_int = False
 
-	def branchexeclp(self, allowaddcons):
-		self.model.getLPBranchCands()
-		self.count += 1
-		if self.count >= 2:
-			return {"result": SCIP_RESULT.DIDNOTRUN}
-		assert allowaddcons
+    def branchexeclp(self, allowaddcons):
+        self.model.getLPBranchCands()
+        self.count += 1
+        if self.count >= 2:
+            return {"result": SCIP_RESULT.DIDNOTRUN}
+        assert allowaddcons
 
-		assert not self.model.inRepropagation()
-		assert not self.model.inProbing()
-		self.model.startProbing()
-		assert not self.model.isObjChangedProbing()
-		self.model.fixVarProbing(self.cont, 2.0)
-		self.model.constructLP()
-		self.model.solveProbingLP()
-		self.model.getLPObjVal()
-		self.model.endProbing()
+        assert not self.model.inRepropagation()
+        assert not self.model.inProbing()
+        self.model.startProbing()
+        assert not self.model.isObjChangedProbing()
+        self.model.fixVarProbing(self.cont, 2.0)
+        self.model.constructLP()
+        self.model.solveProbingLP()
+        self.model.getLPObjVal()
+        self.model.endProbing()
 
-		self.integral = self.model.getLPBranchCands()[0][0]
+        self.integral = self.model.getLPBranchCands()[0][0]
 
-		if self.count == 1:
-			down, eq, up = self.model.branchVarVal(self.cont, 1.3)
-			self.model.chgVarLbNode(down, self.cont, -1.5)
-			self.model.chgVarUbNode(up, self.cont, 3.0)
-			self.was_called_val = True
-			down2, eq2, up2 = self.model.branchVar(self.integral)
-			self.was_called_int = True
-			self.model.createChild(6, 7)
-			return {"result": SCIP_RESULT.BRANCHED}
+        if self.count == 1:
+            down, eq, up = self.model.branchVarVal(self.cont, 1.3)
+            self.model.chgVarLbNode(down, self.cont, -1.5)
+            self.model.chgVarUbNode(up, self.cont, 3.0)
+            self.was_called_val = True
+            down2, eq2, up2 = self.model.branchVar(self.integral)
+            self.was_called_int = True
+            self.model.createChild(6, 7)
+            return {"result": SCIP_RESULT.BRANCHED}
 
 
 
@@ -61,12 +61,12 @@ u = m.addVar(vtype="I", lb=-3, ub=99)
 
 more_vars = []
 for i in range(1000):
-	more_vars.append(m.addVar(vtype="I", lb= -12, ub=40))
-	m.addCons(quicksum(v for v in more_vars) <= (40 - i) * quicksum(v for v in more_vars[::2]))
+    more_vars.append(m.addVar(vtype="I", lb= -12, ub=40))
+    m.addCons(quicksum(v for v in more_vars) <= (40 - i) * quicksum(v for v in more_vars[::2]))
 
 for i in range(1000):
-	more_vars.append(m.addVar(vtype="I", lb= -52, ub=10))
-	m.addCons(quicksum(v for v in more_vars[50::2]) <= (40 - i) * quicksum(v for v in more_vars[405::2]))
+    more_vars.append(m.addVar(vtype="I", lb= -52, ub=10))
+    m.addCons(quicksum(v for v in more_vars[50::2]) <= (40 - i) * quicksum(v for v in more_vars[405::2]))
 
 
 
@@ -86,7 +86,7 @@ m.setObjective(t - quicksum(j*v for j, v in enumerate(more_vars[20:-40])))
 
 my_branchrule = MyBranching(m, x0)
 m.includeBranchrule(my_branchrule, "test branch", "test branching and probing and lp functions",
-					priority=10000000, maxdepth=3, maxbounddist=1)
+                    priority=10000000, maxdepth=3, maxbounddist=1)
 
 m.optimize()
 
