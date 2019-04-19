@@ -11,7 +11,7 @@ class MyBranching(Branchrule):
         self.was_called_int = False
 
     def branchexeclp(self, allowaddcons):
-	self.model.getLPBranchCands()
+        self.model.getLPBranchCands()
         self.count += 1
         if self.count >= 2:
             return {"result": SCIP_RESULT.DIDNOTRUN}
@@ -42,11 +42,15 @@ class MyBranching(Branchrule):
 
 
 
-m = Model()
-m.setIntParam("presolving/maxrounds", 0)
-#m.setLongintParam("lp/rootiterlim", 3)
-m.setRealParam("limits/time", 60)
+# EXECUTION STARTS HERE
 
+m = Model()
+m.setIntParam("presolving/maxrounds", 0) # Is presolving important to us? #TODO
+#m.setLongintParam("lp/rootiterlim", 3)
+m.setRealParam("limits/time", 60) # Is this limit important to us? #TODO
+
+
+# Define the optimization probelm (this is where we will import details from MIPLIB) #TOTO
 x0 = m.addVar(lb=-2, ub=4)
 r1 = m.addVar()
 r2 = m.addVar()
