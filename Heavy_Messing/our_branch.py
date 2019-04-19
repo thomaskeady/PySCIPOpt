@@ -1,3 +1,6 @@
+from cpython cimport Py_INCREF, Py_DECREF
+from libc.stdlib cimport malloc, free
+from libc.stdio cimport fdopen
 from pyscipopt import Model, Branchrule, SCIP_RESULT, quicksum
 
 class Our_Branch_Rule(Branchrule):
