@@ -70,10 +70,14 @@ def relLE(v1, v2, tol = tolerance):
         reltol = tol * max(abs(v1), abs(v2), 1.0)
         return (v1 - v2) <= reltol
 
+def setup_function(function):
+    print("setting up %s" % function)
+
 
 @pytest.mark.parametrize('instance', testset)
 def test_instance(instance):
     print("******** Inside test_instance ********")
+    print(instance)    
     s = Model()
     s.hideOutput()
     s.readProblem(instance)
