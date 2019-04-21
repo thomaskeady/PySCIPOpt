@@ -37,9 +37,9 @@ if sys.version_info >= (3, 0):
 else:
     str_conversion = lambda x:x
 
-ctypedef double SCIP_Real
+#ctypedef double SCIP_Real
 
-ctypedef bint SCIP_Bool
+#ctypedef bint SCIP_Bool
     
 # Mapping the SCIP_RESULT enum to a python class
 # This is required to return SCIP_RESULT in the python code
