@@ -37,9 +37,9 @@ if sys.version_info >= (3, 0):
 else:
     str_conversion = lambda x:x
 
-#ctypedef double SCIP_Real
+ctypedef double* SCIP_Real
 
-#ctypedef bint SCIP_Bool
+ctypedef bint* SCIP_Bool
     
 # Mapping the SCIP_RESULT enum to a python class
 # This is required to return SCIP_RESULT in the python code
@@ -3066,7 +3066,7 @@ cdef class Model:
         # TODO should the stuff be freed and how?
         return Node.create(downchild), Node.create(eqchild), Node.create(upchild)
 
-    def selectVarStrongBranch(self, lpcands, lpcandssol, lpcadsfrac, nlpcands, npriolpcands):
+    def selectVarStrongBranch(self, lpcands, lpcandssol, lpcandsfrac, nlpcands, npriolpcands):
         cdef int bestcand
         cdef SCIP_Real bestdown = <SCIP_Real> malloc(sizeof(SCIP_Real))
         cdef SCIP_Real bestup = <SCIP_Real> malloc(sizeof(SCIP_Real))
