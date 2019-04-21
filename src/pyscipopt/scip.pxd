@@ -1166,6 +1166,12 @@ cdef extern from "scip/scip.h":
 
     BMS_BLKMEM* SCIPblkmem(SCIP* scip)
 
+
+
+
+    
+    SCIP_RETCODE SCIPselectVarStrongBranching(SCIP* scip, SCIP_VAR** lpcands, SCIP_Real* lpcandssol, SCIP_Real* lpcandsfrac, SCIP_Bool* skipdown, SCIP_Bool* skipup, int nlpcands, int npriolpcands, int ncomplete, int* start, int maxproprounds, SCIP_Bool probingbounds, SCIP_Bool forcestrongbranch, int* bestcand, SCIP_Real* bestdown, SCIP_Real* bestup, SCIP_Real* bestscore, SCIP_Bool* bestdownvalid, SCIP_Bool* bestupvalid, SCIP_Real* provedbound, SCIP_RESULT* result)		
+
 cdef extern from "scip/tree.h":
     int SCIPnodeGetNAddedConss(SCIP_NODE* node)
 

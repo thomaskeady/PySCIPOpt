@@ -37,6 +37,10 @@ if sys.version_info >= (3, 0):
 else:
     str_conversion = lambda x:x
 
+ctypedef double* SCIP_Real
+
+ctypedef bint* SCIP_Bool
+    
 # Mapping the SCIP_RESULT enum to a python class
 # This is required to return SCIP_RESULT in the python code
 # In __init__.py this is imported as SCIP_RESULT to keep the
@@ -3028,6 +3032,38 @@ cdef class Model:
 
         return ([Variable.create(lpcands[i]) for i in range(ncands)], [lpcandssol[i] for i in range(ncands)],
                 [lpcandsfrac[i] for i in range(ncands)], nlpcands, npriolpcands, nfracimplvars)
+    
+    def getLPBranchCands_ret_C(self):
+        """gets branching candidates for LP solution branching (fractional variables) along with solution values,
+        fractionalities, and number of branching candidates; The number of branching candidates does NOT account
+        for fractional implicit integer variables which should not be used for branching decisions. Fractional
+        implicit integer variables are stored at the positions *nlpcands to *nlpcands + *nfracimplvars - 1
+        branching rules should always select the branching candidate among the first npriolpcands of the candidate list
+
+        :return tuple (lpcands, lpcandssol, lpcadsfrac, nlpcands, npriolpcands, nfracimplvars) where
+
+            lpcands: list of variables of LP branching candidates
+            lpcandssol: list of LP candidate solution values
+            lpcandsfrac	list of LP candidate fractionalities
+            nlpcands:    number of LP branching candidates
+            npriolpcands: number of candidates with maximal priority
+            nfracimplvars: number of fractional implicit integer variables
+
+        """
+        cdef int ncands
+        cdef int nlpcands
+        cdef int npriolpcands
+        cdef int nfracimplvars
+
+        ncands = SCIPgetNLPBranchCands(self._scip)
+        cdef SCIP_VAR** lpcands = <SCIP_VAR**> malloc(ncands * sizeof(SCIP_VAR*))
+        cdef SCIP_Real* lpcandssol = <SCIP_Real*> malloc(ncands * sizeof(SCIP_Real))
+        cdef SCIP_Real* lpcandsfrac = <SCIP_Real*> malloc(ncands * sizeof(SCIP_Real))
+
+        PY_SCIP_CALL(SCIPgetLPBranchCands(self._scip, &lpcands, &lpcandssol, &lpcandsfrac,
+                                          &nlpcands, &npriolpcands, &nfracimplvars))
+
+        return (lpcands, lpcandssol, lpcandsfrac, nlpcands, npriolpcands, nfracimplvars)
 
 
     def branchVar(self, variable):
@@ -3062,6 +3098,7 @@ cdef class Model:
         # TODO should the stuff be freed and how?
         return Node.create(downchild), Node.create(eqchild), Node.create(upchild)
 
+<<<<<<< HEAD
     def selectVarStrongBranch(self):
 
         cdef int ncands
@@ -3076,16 +3113,19 @@ cdef class Model:
 
         PY_SCIP_CALL(SCIPgetLPBranchCands(self._scip, &lpcands, &lpcandssol, &lpcandsfrac, &nlpcands, &npriolpcands, &nfracimplvars))
 
+=======
+    def selectVarStrongBranch(self, lpcands, lpcandssol, lpcandsfrac, nlpcands, npriolpcands):
+>>>>>>> cf223d16c143a71e75a44b04f8e8d031aaca3678
         cdef int bestcand
-        cdef SCIP_Real* bestdown = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cdef SCIP_Real* bestup = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cdef SCIP_Real* bestscore = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cdef SCIP_Bool* bestdownvalid = <SCIP_Bool*> malloc(sizeof(SCIP_Bool))
-        cdef SCIP_Bool* bestupvalid = <SCIP_Bool*> malloc(sizeof(SCIP_Bool))
-        cdef SCIP_Real* provedbound = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cedf SCIP_RESULT* result = <SCIP_RESULT*> malloc(sizeof(SCIP_RESULT))
+        cdef SCIP_Real bestdown = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_Real bestup = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_Real bestscore = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_Bool bestdownvalid = <SCIP_Bool> malloc(sizeof(SCIP_Bool))
+        cdef SCIP_Bool bestupvalid = <SCIP_Bool> malloc(sizeof(SCIP_Bool))
+        cdef SCIP_Real provedbound = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_RESULT result = <SCIP_RESULT> malloc(sizeof(SCIP_RESULT))
 
-        PY_SCIP_CALL(SCIPselectVarStrongBranching(self._scip, &lpcands, &lpcandssol, &lpcandsfrac, False, False, nlpcands, npriolpcands, nlpcands, 0, -1, False, True, &bestcand, &bestdown, &bestup, &bestscore, &bestdownvalid, &bestupvalid, &provedbound, &result)
+        PY_SCIP_CALL(SCIPselectVarStrongBranching(self._scip, &lpcands, &lpcandssol, &lpcandsfrac, False, False, nlpcands, npriolpcands, nlpcands, 0, -1, False, True, &bestcand, &bestdown, &bestup, &bestscore, &bestdownvalid, &bestupvalid, &provedbound, &result))
 
         return bestcand
 
