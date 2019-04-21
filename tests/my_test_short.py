@@ -2,6 +2,8 @@ from pyscipopt import Model, Branchrule, SCIP_RESULT, quicksum
 import pytest
 import os
 
+from OurBranchRule import OurBranchRule
+
 # This test requires a directory link in tests/ to check/ in the main SCIP directory.
 
 testset = []
@@ -10,18 +12,18 @@ dualsolutions = {}
 tolerance = 1e-5
 infinity = 1e20
 
-#testsetpath = 'check/testset/short.test'
-#solufilepath = 'check/testset/short.solu'
+testsetpath = 'check/testset/short.test'
+solufilepath = 'check/testset/short.solu'
 
 #testsetpath = '/home/tkeady5/Documents/scipoptsuite-6.0.1/scip/check/testset/short.test'
 #solufilepath = '/home/tkeady5/Documents/scipoptsuite-6.0.1/scip/check/testset/short.solu'
 
-testsetpath = 'check/testset/one.test'
-solufilepath = 'check/testset/one.solu'
+#testsetpath = 'check/testset/one.test'
+#solufilepath = 'check/testset/one.solu'
 
 print("******** After path declarations ********")
 
-
+"""
 class MyBranching(Branchrule):
 
     def __init__(self, model, cont):
@@ -59,7 +61,7 @@ class MyBranching(Branchrule):
             self.was_called_int = True
             self.model.createChild(6, 7)
             return {"result": SCIP_RESULT.BRANCHED}
-
+"""
 
 
 if not all(os.path.isfile(fn) for fn in [testsetpath, solufilepath]):
@@ -126,9 +128,9 @@ def test_instance(instance):
     s.readProblem(instance)
 
     # Copy pasta from test_branch_probin_lp
-    my_branchrule = MyBranching(s)
-    m.includeBranchrule(my_branchrule, "test branch", "test branching and probing and lp functions",
-                    priority=10000000, maxdepth=3, maxbounddist=1)
+    my_branchrule = OurBranchRule(s)
+    s.includeBranchrule(my_branchrule, "test branch", "test branching and probing and lp functions",
+                priority=10000000, maxdepth=-1, maxbounddist=1)
 
 
     s.optimize()
