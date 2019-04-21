@@ -13,8 +13,11 @@ infinity = 1e20
 #testsetpath = 'check/testset/short.test'
 #solufilepath = 'check/testset/short.solu'
 
-testsetpath = '/home/tkeady5/Documents/scipoptsuite-6.0.1/scip/check/testset/short.test'
-solufilepath = '/home/tkeady5/Documents/scipoptsuite-6.0.1/scip/check/testset/short.solu'
+#testsetpath = '/home/tkeady5/Documents/scipoptsuite-6.0.1/scip/check/testset/short.test'
+#solufilepath = '/home/tkeady5/Documents/scipoptsuite-6.0.1/scip/check/testset/short.solu'
+
+testsetpath = 'check/testset/one.test'
+solufilepath = 'check/testset/one.solu'
 
 print("******** After path declarations ********")
 
