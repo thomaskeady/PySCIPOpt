@@ -34,5 +34,5 @@ from pyscipopt.scip      import PY_SCIP_BRANCHDIR    as SCIP_BRANCHDIR
 from pyscipopt.scip      import PY_SCIP_BENDERSENFOTYPE as SCIP_BENDERSENFOTYPE
 
 
-from pyscipopt.scip      import PY_SCIP_Real    as SCIP_Real
-from pyscipopt.scip      import PY_SCIP_Bool    as SCIP_Bool
+#from pyscipopt.scip      import PY_SCIP_Real    as SCIP_Real
+#from pyscipopt.scip      import PY_SCIP_Bool    as SCIP_Bool
