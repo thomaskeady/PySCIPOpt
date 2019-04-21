@@ -8,7 +8,7 @@ class OurBranchRule(Branchrule):
     def __init__(self, model):
         self.model = model
 
-    def branchexeclp(self):
+    def branchexeclp(self, allowaddcons):
         self.model.startProbing()
         self.model.constructLP()
         self.model.solveProbingLP()
