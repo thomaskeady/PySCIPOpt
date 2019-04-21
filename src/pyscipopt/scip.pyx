@@ -37,6 +37,12 @@ if sys.version_info >= (3, 0):
 else:
     str_conversion = lambda x:x
 
+cdef class PY_SCIP_Real:
+    Real = SCIP_Real
+
+cdef class PY_SCIP_Bool:
+    Bool = SCIP_Bool 
+    
 # Mapping the SCIP_RESULT enum to a python class
 # This is required to return SCIP_RESULT in the python code
 # In __init__.py this is imported as SCIP_RESULT to keep the
@@ -3064,15 +3070,15 @@ cdef class Model:
 
     def selectVarStrongBranch(self, lpcands, lpcandssol, lpcadsfrac, nlpcands, npriolpcands):
         cdef int bestcand
-        cdef SCIP_Real* bestdown = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cdef SCIP_Real* bestup = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cdef SCIP_Real* bestscore = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cdef SCIP_Bool* bestdownvalid = <SCIP_Bool*> malloc(sizeof(SCIP_Bool))
-        cdef SCIP_Bool* bestupvalid = <SCIP_Bool*> malloc(sizeof(SCIP_Bool))
-        cdef SCIP_Real* provedbound = <SCIP_Real*> malloc(sizeof(SCIP_Real))
-        cedf SCIP_RESULT* result = <SCIP_RESULT*> malloc(sizeof(SCIP_RESULT))
+        cdef SCIP_Real bestdown = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_Real bestup = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_Real bestscore = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_Bool bestdownvalid = <SCIP_Bool> malloc(sizeof(SCIP_Bool))
+        cdef SCIP_Bool bestupvalid = <SCIP_Bool> malloc(sizeof(SCIP_Bool))
+        cdef SCIP_Real provedbound = <SCIP_Real> malloc(sizeof(SCIP_Real))
+        cdef SCIP_RESULT result = <SCIP_RESULT> malloc(sizeof(SCIP_RESULT))
 
-        PY_SCIP_CALL(SCIPselectVarStrongBranching(self._scip, &lpcands, &lpcandssol, &lpcandsfrac, False, False, nlpcands, npriolpcands, nlpcands, 0, -1, False, True, &bestcand, &bestdown, &bestup, &bestscore, &bestdownvalid, &bestupvalid, &provedbound, &result)
+        PY_SCIP_CALL(SCIPselectVarStrongBranching(self._scip, &lpcands, &lpcandssol, &lpcandsfrac, False, False, nlpcands, npriolpcands, nlpcands, 0, -1, False, True, &bestcand, &bestdown, &bestup, &bestscore, &bestdownvalid, &bestupvalid, &provedbound, &result))
 
         return bestcand
 
