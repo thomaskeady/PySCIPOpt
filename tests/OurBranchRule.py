@@ -16,6 +16,7 @@ class OurBranchRule(Branchrule):
         self.model.endProbing()
 
         lpcands, lpcandssol, lpcandsfrac, nlpcands, npriolpcands, nfracimplvars = self.model.getLPBranchCands()
+        lpcands, lpcandssol, lpcandsfrac, _,_,_ = self.model.getLPBranchCands_ret_C()
 
         #no skipping, no limit to prop rounds, no probing bounds, yes forcestrongbranch
         bestcand = self.model.selectVarStrongBranch(lpcands, lpcandssol, lpcandsfrac, nlpcands, npriolpcands)
