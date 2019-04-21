@@ -1,4 +1,4 @@
-from pyscipopt import Model
+from pyscipopt import Model, Branchrule, SCIP_RESULT, quicksum
 import pytest
 import os
 
