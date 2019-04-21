@@ -3062,7 +3062,20 @@ cdef class Model:
         # TODO should the stuff be freed and how?
         return Node.create(downchild), Node.create(eqchild), Node.create(upchild)
 
-    def selectVarStrongBranch(self, lpcands, lpcandssol, lpcadsfrac, nlpcands, npriolpcands):
+    def selectVarStrongBranch(self):
+
+        cdef int ncands
+        cdef int nlpcands
+        cdef int npriolpcands
+        cdef int nfracimplvars
+
+        ncands = SCIPgetNLPBranchCands(self._scip)
+        cdef SCIP_VAR** lpcands = <SCIP_VAR**> malloc(ncands * sizeof(SCIP_VAR*))
+        cdef SCIP_Real* lpcandssol = <SCIP_Real*> malloc(ncands * sizeof(SCIP_Real))
+        cdef SCIP_Real* lpcandsfrac = <SCIP_Real*> malloc(ncands * sizeof(SCIP_Real))
+
+        PY_SCIP_CALL(SCIPgetLPBranchCands(self._scip, &lpcands, &lpcandssol, &lpcandsfrac, &nlpcands, &npriolpcands, &nfracimplvars))
+
         cdef int bestcand
         cdef SCIP_Real* bestdown = <SCIP_Real*> malloc(sizeof(SCIP_Real))
         cdef SCIP_Real* bestup = <SCIP_Real*> malloc(sizeof(SCIP_Real))
