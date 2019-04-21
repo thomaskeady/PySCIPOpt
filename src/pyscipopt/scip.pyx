@@ -39,7 +39,7 @@ else:
 
 ctypedef double SCIP_Real
 
-ctypedef boolean SCIP_Bool
+ctypedef bint SCIP_Bool
     
 # Mapping the SCIP_RESULT enum to a python class
 # This is required to return SCIP_RESULT in the python code
